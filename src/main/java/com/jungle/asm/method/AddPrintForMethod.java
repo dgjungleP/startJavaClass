@@ -21,20 +21,43 @@ public class AddPrintForMethod {
                     return method;
                 } else {
                     return new AdviceAdapter(Opcodes.ASM7, method, access, name, descriptor) {
+                        Label start = new Label();
+
                         @Override
                         protected void onMethodEnter() {
                             super.onMethodEnter();
+                            mv.visitLabel(start);
                             mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
                             mv.visitLdcInsn("enter " + name);
                             mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
                         }
 
                         @Override
+                        public void visitMaxs(int maxStack, int maxLocals) {
+                            Label end = new Label();
+                            mv.visitTryCatchBlock(start, end, end, null);
+                            mv.visitLabel(end);
+                            finallyBlock(Opcodes.ATHROW);
+                            mv.visitInsn(Opcodes.ATHROW);
+                            super.visitMaxs(maxStack, maxLocals);
+                        }
+
+                        private void finallyBlock(int opcode) {
+                            mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+                            if (opcode == Opcodes.ATHROW) {
+                                mv.visitLdcInsn("Exception exit " + name);
+                            } else {
+                                mv.visitLdcInsn("exit " + name);
+                            }
+                            mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+                        }
+
+                        @Override
                         protected void onMethodExit(int opcode) {
                             super.onMethodExit(opcode);
-                            mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-                            mv.visitLdcInsn("exit " + name);
-                            mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+                            if (opcode != Opcodes.ATHROW) {
+                                finallyBlock(opcode);
+                            }
                         }
                     };
                 }

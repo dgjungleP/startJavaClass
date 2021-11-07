@@ -13,5 +13,6 @@ public class MethodChange {
 
     public void print() {
         System.out.println("Hello asm");
+        int b = 1 / 0;
     }
 }
