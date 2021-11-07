@@ -1,4 +1,4 @@
-package com.jungle.asm;
+package com.jungle.asm.base;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
@@ -12,10 +12,10 @@ import java.io.InputStream;
 
 public class TestASM {
     public static void main(String[] args) {
-        InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("com/jungle/asm/MyTest.class");
+        InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("com/jungle/asm/base/MyTest.class");
         byte[] bytes = IoUtil.readBytes(stream);
         ClassReader reader = new ClassReader(bytes);
-//        useCore(reader);
+        useCore(reader);
         useTree(reader);
 
     }
@@ -30,6 +30,14 @@ public class TestASM {
             System.out.println("Method name :" + method.name);
         }
         FieldNode fieldNode = new FieldNode(Opcodes.ACC_PUBLIC, "k", "Ljava/lang/String;", null, null);
+        MethodNode newMethod = new MethodNode(Opcodes.ACC_PUBLIC, "newMethod", "(ILjava/lang/String;)V", null, null);
+        if (node.fields.removeIf((field) -> field.name.equals("extra"))) {
+            System.out.println("Field deleted");
+        }
+        if (node.methods.removeIf((method) -> method.name.equals("xyz"))) {
+            System.out.println("Method deleted");
+        }
+        node.methods.add(newMethod);
         node.fields.add(fieldNode);
         ClassWriter writer = new ClassWriter(0);
         node.accept(writer);
@@ -42,12 +50,20 @@ public class TestASM {
             @Override
             public FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
                 System.out.println("Field name :" + name);
+                if ("extra".equals(name)) {
+                    System.out.println("Field deleted : " + name);
+                    return null;
+                }
                 return super.visitField(access, name, descriptor, signature, value);
             }
 
             @Override
             public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
                 System.out.println("Method name :" + name);
+                if ("xyz".equals(name)) {
+                    System.out.println("Method deleted : " + name);
+                    return null;
+                }
                 return super.visitMethod(access, name, descriptor, signature, exceptions);
             }
 
@@ -57,6 +73,10 @@ public class TestASM {
                 FieldVisitor field = cv.visitField(Opcodes.ACC_PUBLIC, "k", "Ljava/lang/String;", null, null);
                 if (field != null) {
                     field.visitEnd();
+                }
+                MethodVisitor newMethod = cv.visitMethod(Opcodes.ACC_PUBLIC, "newMethod", "(ILjava/lang/String;)V", null, null);
+                if (newMethod != null) {
+                    newMethod.visitEnd();
                 }
             }
         };
