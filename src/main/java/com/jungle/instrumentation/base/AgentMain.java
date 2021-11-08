@@ -1,4 +1,4 @@
-package com.jungle.instrumentation;
+package com.jungle.instrumentation.base;
 
 import java.lang.instrument.Instrumentation;
 

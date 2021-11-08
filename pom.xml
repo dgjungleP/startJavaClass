@@ -45,32 +45,6 @@
         <finalName>myAgent</finalName>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Agent-Class>com.jungle.instrumentation.AgentMain</Agent-Class>
-                            <Premain-Class>com.jungle.instrumentation.AgentMain</Premain-Class>
-                            <Can-Redefine-Classes>true</Can-Redefine-Classes>
-                            <Can-Retransform-CLasses>true</Can-Retransform-CLasses>
-                        </manifestEntries>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <addExtensions>true</addExtensions>
-                            <!-- 依赖包的前缀就是jar包所在的文件夹 -->
-                            <classpathPrefix>dependency/</classpathPrefix>
-                            <mainClass>com.jungle.instrumentation.AgentMain</mainClass>
-                        </manifest>
-                    </archive>
-                    <includes>
-                        <include>**/*.class</include>
-                        <include>**/*.properties</include>
-                    </includes>
-                </configuration>
-            </plugin>
-            <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <appendAssemblyId>false</appendAssemblyId>
@@ -79,8 +53,8 @@
                     </descriptorRefs>
                     <archive>
                         <manifestEntries>
-                            <Agent-Class>com.jungle.instrumentation.AgentMain</Agent-Class>
-                            <Premain-Class>com.jungle.instrumentation.AgentMain</Premain-Class>
+                            <Agent-Class>com.jungle.instrumentation.attach.AgentMain</Agent-Class>
+                            <Premain-Class>com.jungle.instrumentation.base.AgentMain</Premain-Class>
                             <Can-Redefine-Classes>true</Can-Redefine-Classes>
                             <Can-Retransform-CLasses>true</Can-Retransform-CLasses>
                         </manifestEntries>
@@ -89,7 +63,7 @@
                             <addExtensions>true</addExtensions>
                             <!-- 依赖包的前缀就是jar包所在的文件夹 -->
                             <classpathPrefix>dependency/</classpathPrefix>
-                            <mainClass>com.jungle.instrumentation.AgentMain</mainClass>
+                            <mainClass>com.jungle.instrumentation.base.AgentMain</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

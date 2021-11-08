@@ -1,4 +1,4 @@
-package com.jungle.instrumentation;
+package com.jungle.instrumentation.base;
 
 
 import org.objectweb.asm.ClassReader;
@@ -14,7 +14,7 @@ public class MyClassFileTransformer implements ClassFileTransformer {
 
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
-        if (!"com/jungle/instrumentation/MyTest".equals(className)) {
+        if (!"com/jungle/instrumentation/base/MyTest".equals(className)) {
             return classfileBuffer;
         }
         ClassReader reader = new ClassReader(classfileBuffer);

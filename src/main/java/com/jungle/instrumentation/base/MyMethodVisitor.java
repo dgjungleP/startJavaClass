@@ -1,4 +1,4 @@
-package com.jungle.instrumentation;
+package com.jungle.instrumentation.base;
 
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;

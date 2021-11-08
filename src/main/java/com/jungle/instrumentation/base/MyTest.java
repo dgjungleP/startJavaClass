@@ -1,4 +1,4 @@
-package com.jungle.instrumentation;
+package com.jungle.instrumentation.base;
 
 public class MyTest {
     public static void main(String[] args) {

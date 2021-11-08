@@ -1,4 +1,4 @@
-package com.jungle.instrumentation;
+package com.jungle.instrumentation.attach;
 
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -12,10 +12,11 @@ public class MyClassVisitor extends ClassVisitor {
 
     @Override
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
+
         MethodVisitor method = super.visitMethod(access, name, descriptor, signature, exceptions);
-        if ("<init>".equals(name)) {
-            return method;
+        if ("foo".equals(name)) {
+            return new MyMethodVisitor(Opcodes.ASM7, method, access, name, descriptor);
         }
-        return new MyMethodVisitor(Opcodes.ASM7, method, access, name, descriptor);
+        return method;
     }
 }
