@@ -5,9 +5,6 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 public class MyClassVisitor extends ClassVisitor {
-    public MyClassVisitor(int api) {
-        super(api);
-    }
 
     public MyClassVisitor(int api, ClassVisitor classVisitor) {
         super(api, classVisitor);
@@ -15,7 +12,6 @@ public class MyClassVisitor extends ClassVisitor {
 
     @Override
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-
         MethodVisitor method = super.visitMethod(access, name, descriptor, signature, exceptions);
         if ("<init>".equals(name)) {
             return method;
