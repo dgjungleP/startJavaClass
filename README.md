@@ -30,3 +30,7 @@
 > > 2. 在Agent的Jar包中指定MANIFEST.MF文件的Premain-Class
 > > 3. 在Agent类中实现premain的静态方法
 > - JVM运行以后任意时刻通过Attach API远程加载Agent的jar包
+
+# 注：
+
+> 1. 绝大部分使用框架都是使用字节码编程生产代理类，来避免使用反射进行操作
